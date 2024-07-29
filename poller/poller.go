@@ -87,9 +87,9 @@ func (p *Poller) run() {
 			p.Cacher.Wait()
 
 			// 4. Update metrics
-			rewardsVal, _ := utils.DivBy1e18(rewards).Float64()
-			uniIOTXRewardsVal, _ := utils.DivBy1e18(uniIOTXRewards).Float64()
-			ratioVal, _ := utils.DivBy1e14(ratio).Float64()
+			rewardsVal := utils.BigIntToFloat64(rewards, 1e18, 3)
+			uniIOTXRewardsVal := utils.BigIntToFloat64(uniIOTXRewards, 1e18, 3)
+			ratioVal := utils.BigIntToFloat64(ratio, 1e18, 3)
 			if oldData == nil {
 				metrics.ManagerRewards.Set(rewardsVal)
 				metrics.UniIOTXManagerRewards.Set(uniIOTXRewardsVal)

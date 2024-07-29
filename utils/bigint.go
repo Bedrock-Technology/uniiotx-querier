@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"math"
 	"math/big"
 )
 
@@ -11,12 +12,11 @@ func UniIOTXRewards(iotxRewards, exchangeRatio *big.Int) *big.Int {
 	return result
 }
 
-func DivBy1e18(value *big.Int) *big.Int {
-	value.Div(value, big.NewInt(1e18))
-	return value
-}
+func BigIntToFloat64(number *big.Int, multiplier float64, precision int) float64 {
+	val := new(big.Float).SetInt(number)
+	val.Quo(val, big.NewFloat(multiplier))
 
-func DivBy1e14(value *big.Int) *big.Int {
-	value.Div(value, big.NewInt(1e14))
-	return value
+	num, _ := val.Float64()
+	mult := math.Pow10(precision)
+	return math.Floor(num*mult) / mult
 }

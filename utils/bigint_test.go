@@ -6,8 +6,18 @@ import (
 	"testing"
 )
 
-func TestDivBy1e18(t *testing.T) {
-	val, _ := new(big.Int).SetString("10000000000000000000", 10)
-	divVal := DivBy1e18(val)
-	require.Equal(t, "10", divVal.String())
+func TestBigIntToFloat64(t *testing.T) {
+	scenarios := []struct {
+		bigIntStr  string
+		float64Val float64
+	}{
+		{"678588874559603801060078", 678588.874},
+		{"1040437090975081423", 1.04},
+	}
+
+	for _, s := range scenarios {
+		val, _ := new(big.Int).SetString(s.bigIntStr, 10)
+		result := BigIntToFloat64(val, 1e18, 3)
+		require.Equal(t, s.float64Val, result)
+	}
 }
