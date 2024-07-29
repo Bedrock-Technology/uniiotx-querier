@@ -34,7 +34,7 @@ func (s *MyStorer) ListDailyManagerRewardsByYear(year int) ([]common.DailyManage
 	var results []common.DailyManagerRewards
 	for _, row := range rows {
 		results = append(results, common.DailyManagerRewards{
-			Date:           year,
+			Date:           int(row.Date),
 			Year:           int(row.Year),
 			Month:          int(row.Month),
 			Day:            int(row.Day),
@@ -59,7 +59,7 @@ func (s *MyStorer) ListDailyManagerRewardsByMonth(year, month int) ([]common.Dai
 	var results []common.DailyManagerRewards
 	for _, row := range rows {
 		results = append(results, common.DailyManagerRewards{
-			Date:           year,
+			Date:           int(row.Date),
 			Year:           int(row.Year),
 			Month:          int(row.Month),
 			Day:            int(row.Day),
