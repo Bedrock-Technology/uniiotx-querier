@@ -62,12 +62,13 @@ var rootCmd = &cobra.Command{
 			Metrics:     config.C.DevMode, // determines whether cache statistics are kept during the cache's lifetime.
 		})
 
-		// Create contract caller
+		// Create contract callers
 		ethcli, err := ethclient.Dial(config.C.ChainHost)
 		if err != nil {
 			myLogger.Fatal("failed to create eth client", err)
 		}
 		iotxStakigCaller, _ := bindings.NewIOTXStakingCaller(ethcommon.HexToAddress(config.C.IOTXStaking), ethcli)
+		systemStakigCaller, _ := bindings.NewSystemStakingCaller(ethcommon.HexToAddress(config.C.SystemStaking), ethcli)
 
 		// Create data server
 		interactorFactory := &interactors.InteractorFactory{
@@ -82,10 +83,11 @@ var rootCmd = &cobra.Command{
 
 		// Create poller
 		myPoller := poller.Poller{
-			Logger:            myLogger,
-			IOTXStakingCaller: iotxStakigCaller,
-			Cacher:            c,
-			Storer:            myStorer,
+			Logger:              myLogger,
+			SystemStakingCaller: systemStakigCaller,
+			IOTXStakingCaller:   iotxStakigCaller,
+			Cacher:              c,
+			Storer:              myStorer,
 		}
 
 		// Create metric server

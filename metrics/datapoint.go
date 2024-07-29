@@ -27,4 +27,16 @@ var (
 			Name: prefix + "exchange_ratio",
 			Help: "The exchange ratio of uniIOTX to IOTX",
 		})
+
+	Delegates = promauto.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: prefix + "delegates",
+			Help: "The latest delegates of specified bucket amount level",
+		}, []string{"bucketLevel"})
+
+	Buckets = promauto.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: prefix + "buckets",
+			Help: "The latest buckets of specified bucket amount level",
+		}, []string{"bucketLevel"})
 )

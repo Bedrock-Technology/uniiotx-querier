@@ -18,5 +18,6 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&config.C.ChainHost, "chainHost", "", "https://babel-api.mainnet.iotex.io", "The blockchain host for RPC communication")
 
+	rootCmd.PersistentFlags().StringVarP(&config.C.SystemStaking, "systemstaking", "", "0x68db92a6a78a39dcaff1745da9e89e230ef49d3d", "The address of SystemStaking contract")
 	rootCmd.PersistentFlags().StringVarP(&config.C.IOTXStaking, "iotxstaking", "", "0x2c914Ba874D94090Ba0E6F56790bb8Eb6D4C7e5f", "The address of IOTXStaking contract")
 }

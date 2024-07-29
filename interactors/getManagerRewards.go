@@ -56,7 +56,7 @@ func (i *InteractorFactory) GetManagerRewardsFn() func() usecase.IOInteractor {
 			})
 
 		u.SetTitle("Get daily manger rewards")
-		u.SetDescription("Daily manager rewards and associated exchange ratio")
+		u.SetDescription("Get daily manager rewards and associated exchange ratio. Data is synchronized from the blockchain every 15 seconds.")
 		u.SetExpectedErrors(status.Unavailable, status.Internal, status.NotFound)
 
 		return u

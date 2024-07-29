@@ -88,7 +88,7 @@ func (i *InteractorFactory) ListManagerRewardsByMonthFn() func() usecase.IOInter
 			})
 
 		u.SetTitle("List monthly manger rewards")
-		u.SetDescription("List monthly manager rewards and associated exchange ratio")
+		u.SetDescription("List monthly manager rewards and associated exchange ratio. Data is synchronized from the blockchain every 15 seconds.")
 		u.SetExpectedErrors(status.Internal)
 
 		return u

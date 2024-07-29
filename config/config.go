@@ -14,7 +14,8 @@ var C = &Config{
 
 	ChainHost: "https://babel-api.mainnet.iotex.io",
 
-	IOTXStaking: "0x2c914Ba874D94090Ba0E6F56790bb8Eb6D4C7e5f",
+	SystemStaking: "0x68db92a6a78a39dcaff1745da9e89e230ef49d3d",
+	IOTXStaking:   "0x2c914Ba874D94090Ba0E6F56790bb8Eb6D4C7e5f",
 }
 
 type Config struct {
@@ -31,5 +32,6 @@ type Config struct {
 
 	ChainHost string
 
-	IOTXStaking string
+	SystemStaking string
+	IOTXStaking   string
 }
