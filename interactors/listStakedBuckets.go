@@ -9,7 +9,7 @@ import (
 func (i *InteractorFactory) ListStakedBucketsFn() func() usecase.IOInteractor {
 	return func() usecase.IOInteractor {
 		type input struct {
-			Delegate string `json:"delegate" example:"0xe535379690Dc22Dec14C999E263951C4127B5ACD" description:""`
+			Delegate string `json:"delegate" example:"0xe535379690Dc22Dec14C999E263951C4127B5ACD" description:"The delegate for listing staked buckets"`
 		}
 
 		type output struct {
