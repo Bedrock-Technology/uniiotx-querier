@@ -53,7 +53,8 @@ func (i *InteractorFactory) ListStakedBucketsFn() func() usecase.IOInteractor {
 			})
 
 		u.SetTitle("List the latest staked buckets")
-		u.SetDescription("List the latest staked buckets. Data is synchronized from the blockchain every 15 minutes.")
+		u.SetDescription("List the latest staked buckets. Data is synchronized from the blockchain every 15 minutes. " +
+			"If the delegate input is left empty, then all staked buckets will be taken into account.")
 
 		return u
 	}
