@@ -35,7 +35,7 @@ func (s *DataServer) Start() {
 	s.Logger.Info("DataServer started", "endpoint", fmt.Sprintf("http://%s/docs", s.Addr))
 
 	if err := s.server.ListenAndServe(); err != nil {
-		if errors.Is(err, http.ErrServerClosed) {
+		if !errors.Is(err, http.ErrServerClosed) {
 			s.Logger.Fatal("failed to start DataServer", err)
 		}
 	}
