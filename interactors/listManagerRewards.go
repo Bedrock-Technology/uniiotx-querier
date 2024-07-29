@@ -42,7 +42,7 @@ func (i *InteractorFactory) ListManagerRewardsByYearFn() func() usecase.IOIntera
 			})
 
 		u.SetTitle("List yearly manger rewards")
-		u.SetDescription("List yearly manager rewards and associated exchange ratio. Data is synchronized from the blockchain every 15 seconds." +
+		u.SetDescription("List yearly manager rewards and associated exchange ratio. Data is synchronized from the blockchain every 15 seconds. " +
 			"If the year input is 0, then the current year will be used instead.")
 		u.SetExpectedErrors(status.Internal)
 
@@ -89,7 +89,7 @@ func (i *InteractorFactory) ListManagerRewardsByMonthFn() func() usecase.IOInter
 			})
 
 		u.SetTitle("List monthly manger rewards")
-		u.SetDescription("List monthly manager rewards and associated exchange ratio. Data is synchronized from the blockchain every 15 seconds." + "" +
+		u.SetDescription("List monthly manager rewards and associated exchange ratio. Data is synchronized from the blockchain every 15 seconds. " + "" +
 			"If the year and month inputs are 0, then the current year and current month will be used instead.")
 		u.SetExpectedErrors(status.Internal)
 
