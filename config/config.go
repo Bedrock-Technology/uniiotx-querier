@@ -1,7 +1,7 @@
 package config
 
 var C = &Config{
-	DevMode: true,
+	DevMode: false,
 
 	LogFileName:    "./log.log",
 	ConsoleEncoder: false,

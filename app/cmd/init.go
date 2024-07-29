@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	rootCmd.PersistentFlags().BoolVarP(&config.C.DevMode, "devMode", "", true, "Indicate whether to run in development mode")
+	rootCmd.PersistentFlags().BoolVarP(&config.C.DevMode, "devMode", "", false, "Indicate whether to run in development mode")
 
 	rootCmd.PersistentFlags().StringVarP(&config.C.LogFileName, "logFileName", "", "./log.log", "The file to which logs will be written. If left empty, logs will print to stderr and stdout")
 	rootCmd.PersistentFlags().BoolVarP(&config.C.ConsoleEncoder, "consoleEncoder", "", false, "Indicate whether to log with console encoder")
