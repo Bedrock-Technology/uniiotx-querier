@@ -6,7 +6,7 @@ Ensure you have [Golang](https://go.dev/) installed beforehand. Then, from the `
 run the command `go build -o uniiotx`. An executable file named 'uniiotx' should then appear in the `./app` directory.
 
 ## Run App
-After the Dune API key has been prepared and the app has been built into the `./app` directory,
+After the app has been built into the `./app` directory,
 you can run the app from the `./app` directory with necessary flags using the following command.
 
 ```
