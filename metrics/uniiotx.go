@@ -30,7 +30,7 @@ var (
 
 	AssetStatistics = promauto.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: prefix + "value_statistics",
-			Help: "The statistics of value related info",
+			Name: prefix + "asset_statistics",
+			Help: "The statistics of asset info",
 		}, []string{"valueType"})
 )
