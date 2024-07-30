@@ -3,14 +3,14 @@ RESTful API for querying [uniiotx](https://github.com/Bedrock-Technology/uniiotx
 
 ## Build App
 Ensure you have [Golang](https://go.dev/) installed beforehand. Then, from the `./app` directory,
-run the command `go build -o uniiotx-querier`. An executable file named 'uniiotx-querier' should then appear in the `./app` directory.
+run the command `go build -o uniiotx`. An executable file named 'uniiotx' should then appear in the `./app` directory.
 
 ## Run App
 After the Dune API key has been prepared and the app has been built into the `./app` directory,
 you can run the app from the `./app` directory with necessary flags using the following command.
 
 ```
-./uniiotx-querier \
+./uniiotx \
     --devMode=false \
     
     --logFileName="./log.log" \
@@ -30,10 +30,10 @@ you can run the app from the `./app` directory with necessary flags using the fo
 ```
 
 Alternatively, you can start it using a terminal multiplexer such as [Tmux](https://github.com/tmux/tmux/wiki):  
-To start a new session, use this command: `tmux new-session -d -s uniiotx-querier`.  
-To attach to the session just created, use this command: `tmux attach -t uniiotx-querier`.
+To start a new session, use this command: `tmux new-session -d -s uniiotx ./uniiotx`.  
+To attach to the session just created, use this command: `tmux attach -t uniiotx`.
 
-Please don't forget to provide the flag values as needed. Note you can run directly with `./uniiotx-querier` if you use the above configuration, which uses default values.
+Please don't forget to provide the flag values as needed. Note you can run directly with `./uniiotx` if you use the above configuration, which uses default values.
 
 ## View Logs
 After setting the flag `--logFileName=./log.log`, you can utilize the [Logfile Navigator](https://lnav.org/) to monitor
@@ -42,10 +42,10 @@ From the directory where the `log.log` file is located, execute the command: `ln
 For additional information, refer to the [lnav's documentation](https://lnav.org/docs).
 
 ## Close App
-You can signal the process to terminate gracefully with the following command: `pkill -SIGTERM uniiotx-querier`.
+You can signal the process to terminate gracefully with the following command: `pkill -SIGTERM uniiotx`.
 
 ## Flags Info
-For more information on flags, navigate to the `./app` directory and run the command `./uniiotx-querier -h`.
+For more information on flags, navigate to the `./app` directory and run the command `./uniiotx -h`.
 
 ```
 An app provides a REST API for querying uniIOTX project's contract status
