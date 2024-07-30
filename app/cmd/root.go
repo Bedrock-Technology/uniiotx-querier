@@ -67,8 +67,9 @@ var rootCmd = &cobra.Command{
 		if err != nil {
 			myLogger.Fatal("failed to create eth client", err)
 		}
-		iotxStakigCaller, _ := bindings.NewIOTXStakingCaller(ethcommon.HexToAddress(config.C.IOTXStaking), ethcli)
 		systemStakigCaller, _ := bindings.NewSystemStakingCaller(ethcommon.HexToAddress(config.C.SystemStaking), ethcli)
+		iotxStakigCaller, _ := bindings.NewIOTXStakingCaller(ethcommon.HexToAddress(config.C.IOTXStaking), ethcli)
+		iotxClearCaller, _ := bindings.NewIOTXClearCaller(ethcommon.HexToAddress(config.C.IOTXClear), ethcli)
 
 		// Create data server
 		interactorFactory := &interactors.InteractorFactory{
@@ -86,6 +87,7 @@ var rootCmd = &cobra.Command{
 			Logger:              myLogger,
 			SystemStakingCaller: systemStakigCaller,
 			IOTXStakingCaller:   iotxStakigCaller,
+			IOTXClearCaller:     iotxClearCaller,
 			Cacher:              c,
 			Storer:              myStorer,
 		}

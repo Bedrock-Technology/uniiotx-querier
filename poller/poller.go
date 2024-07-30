@@ -16,7 +16,7 @@ import (
 const (
 	managerRewardsPollingInterval = time.Second * 15
 	bucketsPollingInterval        = time.Minute * 15
-	ttl                           = time.Minute * 15
+	ttl                           = time.Minute * 30
 )
 
 type Poller struct {
@@ -24,6 +24,7 @@ type Poller struct {
 
 	SystemStakingCaller *bindings.SystemStakingCaller
 	IOTXStakingCaller   *bindings.IOTXStakingCaller
+	IOTXClearCaller     *bindings.IOTXClearCaller
 	Cacher              *ristretto.Cache
 	Storer              *storer.MyStorer
 
@@ -54,7 +55,7 @@ func (p *Poller) run() {
 			p.Logger.Info("Poller closed")
 			return
 		case <-t.C:
-			if err := p.syncManagerRewards(); err != nil {
+			if err := p.syncAssetStatistics(); err != nil {
 				continue
 			}
 
@@ -65,71 +66,101 @@ func (p *Poller) run() {
 	}
 }
 
-func (p *Poller) syncManagerRewards() error {
+func (p *Poller) syncAssetStatistics() error {
 	// 1. Query datum
-	rewards, err := p.IOTXStakingCaller.GetManagerReward(nil)
+	totalPending, err := p.IOTXStakingCaller.GetTotalPending(nil)
+	if err != nil {
+		p.Logger.Error("failed to query total pending value", err)
+		return err
+	}
+
+	totalStaked, err := p.IOTXStakingCaller.GetTotalStaked(nil)
+	if err != nil {
+		p.Logger.Error("failed to query total staked value", err)
+		return err
+	}
+
+	managerRewards, err := p.IOTXStakingCaller.GetManagerReward(nil)
 	if err != nil {
 		p.Logger.Error("failed to query manger rewards", err)
 		return err
 	}
 
-	ratio, err := p.IOTXStakingCaller.ExchangeRatio(nil)
+	userRewards, err := p.IOTXStakingCaller.GetUserReward(nil)
+	if err != nil {
+		p.Logger.Error("failed to query user rewards", err)
+		return err
+	}
+
+	exchangeRatio, err := p.IOTXStakingCaller.ExchangeRatio(nil)
 	if err != nil {
 		p.Logger.Error("failed to query exchange ratio", err)
 		return err
 	}
 
+	totalDebts, err := p.IOTXClearCaller.TotalDebts(nil)
+	if err != nil {
+		p.Logger.Error("failed to query total debts", err)
+		return err
+	}
+
 	date, year, month, day := utils.Date(time.Now())
-	uniIOTXRewards := utils.UniIOTXRewards(rewards, ratio)
-	latestData := &common.DailyManagerRewards{
-		Date:           date,
-		Year:           year,
-		Month:          month,
-		Day:            day,
-		IOTXRewards:    rewards.String(),
-		UniIOTXRewards: uniIOTXRewards.String(),
-		ExchangeRatio:  ratio.String(),
+	managerRewardsUniIOTX := utils.ConvertIOTXToUniIOTX(managerRewards, exchangeRatio)
+	userRewardsUniIOTX := utils.ConvertIOTXToUniIOTX(userRewards, exchangeRatio)
+
+	latestData := &common.DailyAssetStatistics{
+		Date:  date,
+		Year:  year,
+		Month: month,
+		Day:   day,
+
+		TotalPending:  totalPending.String(),
+		TotalStaked:   totalStaked.String(),
+		TotalDebts:    totalDebts.String(),
+		ExchangeRatio: exchangeRatio.String(),
+
+		ManagerRewards:        managerRewards.String(),
+		ManagerRewardsUniIOTX: managerRewardsUniIOTX.String(),
+		UserRewards:           userRewards.String(),
+		UserRewardsUniIOTX:    userRewardsUniIOTX.String(),
 	}
 
 	// 2. Update storage
-	err = p.Storer.CreateOrUpdateDailyManagerRewards(latestData, false)
+	err = p.Storer.CreateOrUpdateDailyAssetStatistics(latestData, false)
 	if err != nil {
 		p.Logger.Error("failed to store manager rewards", err)
 		return err
 	}
 
 	// 3. Update cache
-	var oldData *common.DailyManagerRewards
-	if val, ok := p.Cacher.Get(common.CacheKeyLatestManagerRewards); ok {
-		oldData = val.(*common.DailyManagerRewards)
-	}
-
-	p.Cacher.SetWithTTL(common.CacheKeyLatestManagerRewards, latestData, 1, ttl)
+	p.Cacher.SetWithTTL(common.CacheKeyLatestAssetStatistics, latestData, 1, ttl)
 	p.Cacher.Wait()
 
 	// 4. Update metrics
-	rewardsVal := utils.BigIntToFloat64(rewards, 1e18, 3)
-	uniIOTXRewardsVal := utils.BigIntToFloat64(uniIOTXRewards, 1e18, 3)
-	ratioVal := utils.BigIntToFloat64(ratio, 1e18, 3)
-	if oldData == nil {
-		metrics.ManagerRewards.Set(rewardsVal)
-		metrics.UniIOTXManagerRewards.Set(uniIOTXRewardsVal)
-		metrics.ExchangeRatio.Set(ratioVal)
-	} else {
-		if latestData.IOTXRewards != oldData.IOTXRewards {
-			metrics.ManagerRewards.Set(rewardsVal)
-		}
-		if latestData.UniIOTXRewards != oldData.UniIOTXRewards {
-			metrics.UniIOTXManagerRewards.Set(uniIOTXRewardsVal)
-		}
-		if latestData.ExchangeRatio != oldData.ExchangeRatio {
-			metrics.ExchangeRatio.Set(ratioVal)
-		}
-	}
+	totalPendingVal := utils.ConvertBigIntToFloat64(totalPending, 1e18, 3)
+	totalStakedVal := utils.ConvertBigIntToFloat64(totalStaked, 1e18, 3)
+	totalDebtsVal := utils.ConvertBigIntToFloat64(totalDebts, 1e18, 3)
+	exchangeRatioVal := utils.ConvertBigIntToFloat64(exchangeRatio, 1e18, 3)
+
+	managerRewardsVal := utils.ConvertBigIntToFloat64(managerRewards, 1e18, 3)
+	managerRewardsUniIOTXVal := utils.ConvertBigIntToFloat64(managerRewardsUniIOTX, 1e18, 3)
+	userRewardsVal := utils.ConvertBigIntToFloat64(userRewards, 1e18, 3)
+	userRewardsUniIOTXVal := utils.ConvertBigIntToFloat64(userRewardsUniIOTX, 1e18, 3)
+
+	metrics.AssetStatistics.With(prometheus.Labels{"valueType": "totalPending"}).Set(totalPendingVal)
+	metrics.AssetStatistics.With(prometheus.Labels{"valueType": "totalStaked"}).Set(totalStakedVal)
+	metrics.AssetStatistics.With(prometheus.Labels{"valueType": "totalDebts"}).Set(totalDebtsVal)
+	metrics.AssetStatistics.With(prometheus.Labels{"valueType": "exchangeRatio"}).Set(exchangeRatioVal)
+
+	metrics.AssetStatistics.With(prometheus.Labels{"valueType": "managerRewards"}).Set(managerRewardsVal)
+	metrics.AssetStatistics.With(prometheus.Labels{"valueType": "managerRewardsUniIOTX"}).Set(managerRewardsUniIOTXVal)
+	metrics.AssetStatistics.With(prometheus.Labels{"valueType": "userRewards"}).Set(userRewardsVal)
+	metrics.AssetStatistics.With(prometheus.Labels{"valueType": "userRewardsUniIOTX"}).Set(userRewardsUniIOTXVal)
 
 	return nil
 }
 
+// TODO: Persistence
 func (p *Poller) syncBuckets() error {
 	// 1. Check time
 	timeToSync := false

@@ -17,7 +17,7 @@ func TestBigIntToFloat64(t *testing.T) {
 
 	for _, s := range scenarios {
 		val, _ := new(big.Int).SetString(s.bigIntStr, 10)
-		result := BigIntToFloat64(val, 1e18, 3)
+		result := ConvertBigIntToFloat64(val, 1e18, 3)
 		require.Equal(t, s.float64Val, result)
 	}
 }

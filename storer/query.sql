@@ -2,9 +2,9 @@
 -- Get Data
 -- ---------------------------------------------------------------------------------------------------------------------
 
--- name: GetDailyManagerRewards :one
-SELECT year, month, day, iotxRewards, uniIotxRewards, exchangeRatio
-FROM dailyManagerRewards
+-- name: GetDailyAssetStatistics :one
+SELECT date, year, month, day, totalPending, totalStaked, totalDebts, exchangeRatio, managerRewards, managerRewardsUniIOTX, userRewards, userRewardsUniIOTX
+FROM dailyAssetStatistics
 WHERE date = ?;
 
 
@@ -12,37 +12,40 @@ WHERE date = ?;
 -- List Data
 -- ---------------------------------------------------------------------------------------------------------------------
 
--- name: ListDailyManagerRewardsByYear :many
-SELECT date, year, month, day, iotxRewards, uniIotxRewards, exchangeRatio
-FROM dailyManagerRewards
+-- name: ListDailyAssetStatisticsByYear :many
+SELECT date, year, month, day, totalPending, totalStaked, totalDebts, exchangeRatio, managerRewards, managerRewardsUniIOTX, userRewards, userRewardsUniIOTX
+FROM dailyAssetStatistics
 WHERE year = ?;
 
--- name: ListDailyManagerRewardsByMonth :many
-SELECT date, year, month, day, iotxRewards, uniIotxRewards, exchangeRatio
-FROM dailyManagerRewards
+-- name: ListDailyAssetStatisticsByMonth :many
+SELECT date, year, month, day, totalPending, totalStaked, totalDebts, exchangeRatio, managerRewards, managerRewardsUniIOTX, userRewards, userRewardsUniIOTX
+FROM dailyAssetStatistics
 WHERE year = ? AND month = ?;
-
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- Insert Data
 -- ---------------------------------------------------------------------------------------------------------------------
 
--- name: CreateDailyManagerRewards :exec
-INSERT INTO dailyManagerRewards (
-    date, year, month, day, iotxRewards, uniIotxRewards, exchangeRatio
+-- name: CreateDailyAssetStatistics :exec
+INSERT INTO dailyAssetStatistics (
+    date, year, month, day, totalPending, totalStaked, totalDebts, exchangeRatio, managerRewards, managerRewardsUniIOTX, userRewards, userRewardsUniIOTX
 ) VALUES (
-          ?, ?, ?, ?, ?, ?, ?
+             ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
          )
     RETURNING *;
-
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- Update Data
 -- ---------------------------------------------------------------------------------------------------------------------
 
--- name: UpdateDailyManagerRewards :exec
-UPDATE dailyManagerRewards
-set iotxRewards = ?,
-    uniIotxRewards = ?,
-    exchangeRatio = ?
+-- name: UpdateDailyAssetStatistics :exec
+UPDATE dailyAssetStatistics
+set totalPending = ?,
+    totalStaked = ?,
+    totalDebts = ?,
+    exchangeRatio = ?,
+    managerRewards = ?,
+    managerRewardsUniIOTX = ?,
+    userRewards = ?,
+    userRewardsUniIOTX = ?
 WHERE date = ?;

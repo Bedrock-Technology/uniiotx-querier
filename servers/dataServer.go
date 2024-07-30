@@ -65,14 +65,18 @@ func (s *DataServer) newHandler() http.Handler {
 	r.Use(loggerMiddleware, rateLimitMiddleware)
 
 	// Route data services
-	r.Post("/managerRewards", s.If.GetManagerRewardsFn()())
-	r.Post("/managerRewardsByYear", s.If.ListManagerRewardsByYearFn()())
-	r.Post("/managerRewardsByMonth", s.If.ListManagerRewardsByMonthFn()())
-
 	r.Post("/stakedDelegates", s.If.ListStakedDelegatesFn()())
 	r.Post("/stakedBuckets", s.If.ListStakedBucketsFn()())
 
 	r.Post("/redeemedBuckets", s.If.ListRedeemedBucketsFn()())
+
+	r.Post("/managerRewards", s.If.GetManagerRewardsFn()()) // TODO DEL?
+	r.Post("/managerRewardsByYear", s.If.ListManagerRewardsByYearFn()())
+	r.Post("/managerRewardsByMonth", s.If.ListManagerRewardsByMonthFn()())
+
+	r.Post("/assetStatistics", s.If.GetAssetStatisticsFn()())
+	r.Post("/assetStatisticsByYear", s.If.ListAssetStatisticsByYearFn()())
+	r.Post("/assetStatisticsByMonth", s.If.ListAssetStatisticsByMonthFn()())
 
 	// Swagger UI endpoint at /docs.
 	r.Docs("/docs", swgui.New)

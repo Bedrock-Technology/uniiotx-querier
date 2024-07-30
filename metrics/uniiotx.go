@@ -10,24 +10,6 @@ const (
 )
 
 var (
-	ManagerRewards = promauto.NewGauge(
-		prometheus.GaugeOpts{
-			Name: prefix + "manager_rewards",
-			Help: "The amount of manager rewards of IOTX",
-		})
-
-	UniIOTXManagerRewards = promauto.NewGauge(
-		prometheus.GaugeOpts{
-			Name: prefix + "manager_rewards_uniiotx",
-			Help: "The amount of manager rewards of uniIOTX",
-		})
-
-	ExchangeRatio = promauto.NewGauge(
-		prometheus.GaugeOpts{
-			Name: prefix + "exchange_ratio",
-			Help: "The exchange ratio of uniIOTX to IOTX",
-		})
-
 	StakedDelegates = promauto.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: prefix + "staked_delegates",
@@ -45,4 +27,10 @@ var (
 			Name: prefix + "redeemed_buckets",
 			Help: "The number of redeemed buckets",
 		})
+
+	AssetStatistics = promauto.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: prefix + "value_statistics",
+			Help: "The statistics of value related info",
+		}, []string{"valueType"})
 )

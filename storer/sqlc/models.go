@@ -4,6 +4,21 @@
 
 package sqlc
 
+type DailyAssetStatistic struct {
+	Date                  int64
+	Year                  int64
+	Month                 int64
+	Day                   int64
+	Totalpending          string
+	Totalstaked           string
+	Totaldebts            string
+	Exchangeratio         string
+	Managerrewards        string
+	Managerrewardsuniiotx string
+	Userrewards           string
+	Userrewardsuniiotx    string
+}
+
 type DailyManagerReward struct {
 	Date           int64
 	Year           int64

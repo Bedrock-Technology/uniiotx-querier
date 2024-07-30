@@ -9,103 +9,115 @@ import (
 	"context"
 )
 
-const createDailyManagerRewards = `-- name: CreateDailyManagerRewards :exec
+const createDailyAssetStatistics = `-- name: CreateDailyAssetStatistics :exec
 
-INSERT INTO dailyManagerRewards (
-    date, year, month, day, iotxRewards, uniIotxRewards, exchangeRatio
+INSERT INTO dailyAssetStatistics (
+    date, year, month, day, totalPending, totalStaked, totalDebts, exchangeRatio, managerRewards, managerRewardsUniIOTX, userRewards, userRewardsUniIOTX
 ) VALUES (
-          ?, ?, ?, ?, ?, ?, ?
+             ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
          )
-    RETURNING date, year, month, day, iotxrewards, uniiotxrewards, exchangeratio
+    RETURNING date, year, month, day, totalpending, totalstaked, totaldebts, exchangeratio, managerrewards, managerrewardsuniiotx, userrewards, userrewardsuniiotx
 `
 
-type CreateDailyManagerRewardsParams struct {
-	Date           int64
-	Year           int64
-	Month          int64
-	Day            int64
-	Iotxrewards    string
-	Uniiotxrewards string
-	Exchangeratio  string
+type CreateDailyAssetStatisticsParams struct {
+	Date                  int64
+	Year                  int64
+	Month                 int64
+	Day                   int64
+	Totalpending          string
+	Totalstaked           string
+	Totaldebts            string
+	Exchangeratio         string
+	Managerrewards        string
+	Managerrewardsuniiotx string
+	Userrewards           string
+	Userrewardsuniiotx    string
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Insert Data
 // ---------------------------------------------------------------------------------------------------------------------
-func (q *Queries) CreateDailyManagerRewards(ctx context.Context, arg CreateDailyManagerRewardsParams) error {
-	_, err := q.db.ExecContext(ctx, createDailyManagerRewards,
+func (q *Queries) CreateDailyAssetStatistics(ctx context.Context, arg CreateDailyAssetStatisticsParams) error {
+	_, err := q.db.ExecContext(ctx, createDailyAssetStatistics,
 		arg.Date,
 		arg.Year,
 		arg.Month,
 		arg.Day,
-		arg.Iotxrewards,
-		arg.Uniiotxrewards,
+		arg.Totalpending,
+		arg.Totalstaked,
+		arg.Totaldebts,
 		arg.Exchangeratio,
+		arg.Managerrewards,
+		arg.Managerrewardsuniiotx,
+		arg.Userrewards,
+		arg.Userrewardsuniiotx,
 	)
 	return err
 }
 
-const getDailyManagerRewards = `-- name: GetDailyManagerRewards :one
+const getDailyAssetStatistics = `-- name: GetDailyAssetStatistics :one
 
-SELECT year, month, day, iotxRewards, uniIotxRewards, exchangeRatio
-FROM dailyManagerRewards
+SELECT date, year, month, day, totalPending, totalStaked, totalDebts, exchangeRatio, managerRewards, managerRewardsUniIOTX, userRewards, userRewardsUniIOTX
+FROM dailyAssetStatistics
 WHERE date = ?
 `
-
-type GetDailyManagerRewardsRow struct {
-	Year           int64
-	Month          int64
-	Day            int64
-	Iotxrewards    string
-	Uniiotxrewards string
-	Exchangeratio  string
-}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Get Data
 // ---------------------------------------------------------------------------------------------------------------------
-func (q *Queries) GetDailyManagerRewards(ctx context.Context, date int64) (GetDailyManagerRewardsRow, error) {
-	row := q.db.QueryRowContext(ctx, getDailyManagerRewards, date)
-	var i GetDailyManagerRewardsRow
+func (q *Queries) GetDailyAssetStatistics(ctx context.Context, date int64) (DailyAssetStatistic, error) {
+	row := q.db.QueryRowContext(ctx, getDailyAssetStatistics, date)
+	var i DailyAssetStatistic
 	err := row.Scan(
+		&i.Date,
 		&i.Year,
 		&i.Month,
 		&i.Day,
-		&i.Iotxrewards,
-		&i.Uniiotxrewards,
+		&i.Totalpending,
+		&i.Totalstaked,
+		&i.Totaldebts,
 		&i.Exchangeratio,
+		&i.Managerrewards,
+		&i.Managerrewardsuniiotx,
+		&i.Userrewards,
+		&i.Userrewardsuniiotx,
 	)
 	return i, err
 }
 
-const listDailyManagerRewardsByMonth = `-- name: ListDailyManagerRewardsByMonth :many
-SELECT date, year, month, day, iotxRewards, uniIotxRewards, exchangeRatio
-FROM dailyManagerRewards
+const listDailyAssetStatisticsByMonth = `-- name: ListDailyAssetStatisticsByMonth :many
+SELECT date, year, month, day, totalPending, totalStaked, totalDebts, exchangeRatio, managerRewards, managerRewardsUniIOTX, userRewards, userRewardsUniIOTX
+FROM dailyAssetStatistics
 WHERE year = ? AND month = ?
 `
 
-type ListDailyManagerRewardsByMonthParams struct {
+type ListDailyAssetStatisticsByMonthParams struct {
 	Year  int64
 	Month int64
 }
 
-func (q *Queries) ListDailyManagerRewardsByMonth(ctx context.Context, arg ListDailyManagerRewardsByMonthParams) ([]DailyManagerReward, error) {
-	rows, err := q.db.QueryContext(ctx, listDailyManagerRewardsByMonth, arg.Year, arg.Month)
+func (q *Queries) ListDailyAssetStatisticsByMonth(ctx context.Context, arg ListDailyAssetStatisticsByMonthParams) ([]DailyAssetStatistic, error) {
+	rows, err := q.db.QueryContext(ctx, listDailyAssetStatisticsByMonth, arg.Year, arg.Month)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []DailyManagerReward
+	var items []DailyAssetStatistic
 	for rows.Next() {
-		var i DailyManagerReward
+		var i DailyAssetStatistic
 		if err := rows.Scan(
 			&i.Date,
 			&i.Year,
 			&i.Month,
 			&i.Day,
-			&i.Iotxrewards,
-			&i.Uniiotxrewards,
+			&i.Totalpending,
+			&i.Totalstaked,
+			&i.Totaldebts,
 			&i.Exchangeratio,
+			&i.Managerrewards,
+			&i.Managerrewardsuniiotx,
+			&i.Userrewards,
+			&i.Userrewardsuniiotx,
 		); err != nil {
 			return nil, err
 		}
@@ -120,33 +132,38 @@ func (q *Queries) ListDailyManagerRewardsByMonth(ctx context.Context, arg ListDa
 	return items, nil
 }
 
-const listDailyManagerRewardsByYear = `-- name: ListDailyManagerRewardsByYear :many
+const listDailyAssetStatisticsByYear = `-- name: ListDailyAssetStatisticsByYear :many
 
-SELECT date, year, month, day, iotxRewards, uniIotxRewards, exchangeRatio
-FROM dailyManagerRewards
+SELECT date, year, month, day, totalPending, totalStaked, totalDebts, exchangeRatio, managerRewards, managerRewardsUniIOTX, userRewards, userRewardsUniIOTX
+FROM dailyAssetStatistics
 WHERE year = ?
 `
 
 // ---------------------------------------------------------------------------------------------------------------------
 // List Data
 // ---------------------------------------------------------------------------------------------------------------------
-func (q *Queries) ListDailyManagerRewardsByYear(ctx context.Context, year int64) ([]DailyManagerReward, error) {
-	rows, err := q.db.QueryContext(ctx, listDailyManagerRewardsByYear, year)
+func (q *Queries) ListDailyAssetStatisticsByYear(ctx context.Context, year int64) ([]DailyAssetStatistic, error) {
+	rows, err := q.db.QueryContext(ctx, listDailyAssetStatisticsByYear, year)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []DailyManagerReward
+	var items []DailyAssetStatistic
 	for rows.Next() {
-		var i DailyManagerReward
+		var i DailyAssetStatistic
 		if err := rows.Scan(
 			&i.Date,
 			&i.Year,
 			&i.Month,
 			&i.Day,
-			&i.Iotxrewards,
-			&i.Uniiotxrewards,
+			&i.Totalpending,
+			&i.Totalstaked,
+			&i.Totaldebts,
 			&i.Exchangeratio,
+			&i.Managerrewards,
+			&i.Managerrewardsuniiotx,
+			&i.Userrewards,
+			&i.Userrewardsuniiotx,
 		); err != nil {
 			return nil, err
 		}
@@ -161,30 +178,45 @@ func (q *Queries) ListDailyManagerRewardsByYear(ctx context.Context, year int64)
 	return items, nil
 }
 
-const updateDailyManagerRewards = `-- name: UpdateDailyManagerRewards :exec
+const updateDailyAssetStatistics = `-- name: UpdateDailyAssetStatistics :exec
 
-UPDATE dailyManagerRewards
-set iotxRewards = ?,
-    uniIotxRewards = ?,
-    exchangeRatio = ?
+UPDATE dailyAssetStatistics
+set totalPending = ?,
+    totalStaked = ?,
+    totalDebts = ?,
+    exchangeRatio = ?,
+    managerRewards = ?,
+    managerRewardsUniIOTX = ?,
+    userRewards = ?,
+    userRewardsUniIOTX = ?
 WHERE date = ?
 `
 
-type UpdateDailyManagerRewardsParams struct {
-	Iotxrewards    string
-	Uniiotxrewards string
-	Exchangeratio  string
-	Date           int64
+type UpdateDailyAssetStatisticsParams struct {
+	Totalpending          string
+	Totalstaked           string
+	Totaldebts            string
+	Exchangeratio         string
+	Managerrewards        string
+	Managerrewardsuniiotx string
+	Userrewards           string
+	Userrewardsuniiotx    string
+	Date                  int64
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Update Data
 // ---------------------------------------------------------------------------------------------------------------------
-func (q *Queries) UpdateDailyManagerRewards(ctx context.Context, arg UpdateDailyManagerRewardsParams) error {
-	_, err := q.db.ExecContext(ctx, updateDailyManagerRewards,
-		arg.Iotxrewards,
-		arg.Uniiotxrewards,
+func (q *Queries) UpdateDailyAssetStatistics(ctx context.Context, arg UpdateDailyAssetStatisticsParams) error {
+	_, err := q.db.ExecContext(ctx, updateDailyAssetStatistics,
+		arg.Totalpending,
+		arg.Totalstaked,
+		arg.Totaldebts,
 		arg.Exchangeratio,
+		arg.Managerrewards,
+		arg.Managerrewardsuniiotx,
+		arg.Userrewards,
+		arg.Userrewardsuniiotx,
 		arg.Date,
 	)
 	return err

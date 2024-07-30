@@ -10,14 +10,14 @@ import (
 	"github.com/swaggest/usecase/status"
 )
 
-func (i *InteractorFactory) GetManagerRewardsFn() func() usecase.IOInteractor {
+func (i *InteractorFactory) GetAssetStatisticsFn() func() usecase.IOInteractor {
 	return func() usecase.IOInteractor {
 		type input struct {
-			Date int `json:"date" required:"true" example:"20240726" description:"The date to query manager rewards; 0 means the current day."`
+			Date int `json:"date" required:"true" example:"20240726" description:"The date to query asset statistics; 0 means the current day."`
 		}
 
 		type output struct {
-			Data common.DailyManagerRewards `json:"data"`
+			Data common.DailyAssetStatistics `json:"data"`
 		}
 
 		u := usecase.NewIOI(new(input), new(output),
@@ -38,19 +38,12 @@ func (i *InteractorFactory) GetManagerRewardsFn() func() usecase.IOInteractor {
 						return status.Wrap(fmt.Errorf("failed to get manager rewards"), status.Unavailable)
 					}
 
-					out.Data.Date = data.Date
-					out.Data.Year = data.Year
-					out.Data.Month = data.Month
-					out.Data.Day = data.Day
-					out.Data.ExchangeRatio = data.ExchangeRatio
-					out.Data.ManagerRewards = data.ManagerRewards
-					out.Data.ManagerRewardsUniIOTX = data.ManagerRewardsUniIOTX
-
+					out.Data = *data
 					return nil
 				}
 
 				// Read from database if the date is specified
-				data, err := i.Storer.GetDailyManagerRewards(in.Date)
+				data, err := i.Storer.GetDailyAssetStatistics(in.Date)
 				if err != nil {
 					if errors.Is(err, sql.ErrNoRows) {
 						return status.Wrap(fmt.Errorf("failed to get manager rewards: %w", err), status.NotFound)
@@ -62,8 +55,8 @@ func (i *InteractorFactory) GetManagerRewardsFn() func() usecase.IOInteractor {
 				return nil
 			})
 
-		u.SetTitle("Get daily manger rewards")
-		u.SetDescription("Get daily manager rewards and associated exchange ratio. Data is synchronized from the blockchain every 15 seconds. " +
+		u.SetTitle("Get daily asset statistics")
+		u.SetDescription("Get daily asset statistics. Data is synchronized from the blockchain every 15 seconds. " +
 			"If the date input is 0, then the current day will be used instead.")
 		u.SetExpectedErrors(status.Unavailable, status.Internal, status.NotFound)
 

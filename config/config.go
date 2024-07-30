@@ -16,6 +16,7 @@ var C = &Config{
 
 	SystemStaking: "0x68db92a6a78a39dcaff1745da9e89e230ef49d3d",
 	IOTXStaking:   "0x2c914Ba874D94090Ba0E6F56790bb8Eb6D4C7e5f",
+	IOTXClear:     "0x7AD800771743F4e29f55235A55895273035FB546",
 }
 
 type Config struct {
@@ -34,4 +35,5 @@ type Config struct {
 
 	SystemStaking string
 	IOTXStaking   string
+	IOTXClear     string
 }
