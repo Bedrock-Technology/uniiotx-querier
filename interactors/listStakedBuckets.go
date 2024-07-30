@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/Bedrock-Technology/uniiotx-querier/common"
 	"github.com/swaggest/usecase"
+	"sort"
 )
 
 func (i *InteractorFactory) ListStakedBucketsFn() func() usecase.IOInteractor {
@@ -43,6 +44,10 @@ func (i *InteractorFactory) ListStakedBucketsFn() func() usecase.IOInteractor {
 
 				out.Data.Delegate = in.Delegate
 				if len(bucketLevelToBuckets) > 0 {
+					sort.Ints(bucketLevelToBuckets[0])
+					sort.Ints(bucketLevelToBuckets[1])
+					sort.Ints(bucketLevelToBuckets[2])
+
 					out.Data.Total = len(bucketLevelToBuckets[0]) + len(bucketLevelToBuckets[1]) + len(bucketLevelToBuckets[2])
 					out.Data.Level1Buckets = bucketLevelToBuckets[0]
 					out.Data.Level2Buckets = bucketLevelToBuckets[1]
