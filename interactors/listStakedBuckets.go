@@ -27,7 +27,7 @@ func (i *InteractorFactory) ListStakedBucketsFn() func() usecase.IOInteractor {
 				_ = in
 
 				delegateToBuckets := make(map[string]map[int][]int)
-				if val, ok := i.Cacher.Get(common.CacheKeyDelegateToBuckets); ok {
+				if val, ok := i.Cacher.Get(common.CacheKeyStakedDelegateToBuckets); ok {
 					delegateToBuckets = val.(map[string]map[int][]int)
 				}
 

@@ -24,7 +24,7 @@ func (i *InteractorFactory) ListStakedDelegatesFn() func() usecase.IOInteractor 
 				_ = in
 
 				bucketLevelToDelegateList := make(map[int][]string)
-				if val, ok := i.Cacher.Get(common.CacheKeyBucketLevelToDelegates); ok {
+				if val, ok := i.Cacher.Get(common.CacheKeyStakedBucketLevelToDelegates); ok {
 					bucketLevelToDelegateList = val.(map[int][]string)
 				}
 

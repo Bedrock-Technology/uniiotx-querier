@@ -24,3 +24,8 @@ type StakedBuckets struct {
 	Level2Buckets []int  `json:"level2Buckets" example:"[30]" description:"Level 2 means the staking amount in its bucket is 100,000 IOTX"`
 	Level3Buckets []int  `json:"leve31Buckets" example:"[2038]" description:"Level 3 means the staking amount in its bucket is 1,000,000 IOTX"`
 }
+
+type RedeemedBuckets struct {
+	Total   int   `json:"total" example:"3" description:"The total number of buckets"`
+	Buckets []int `json:"Buckets" example:"[2038]" description:"The bucket ID list with an amount of 1,000,000 IOTX"`
+}

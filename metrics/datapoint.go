@@ -13,13 +13,13 @@ var (
 	ManagerRewards = promauto.NewGauge(
 		prometheus.GaugeOpts{
 			Name: prefix + "manager_rewards",
-			Help: "The manager rewards of IOTX",
+			Help: "The amount of manager rewards of IOTX",
 		})
 
 	UniIOTXManagerRewards = promauto.NewGauge(
 		prometheus.GaugeOpts{
 			Name: prefix + "manager_rewards_uniiotx",
-			Help: "The manager rewards of uniIOTX",
+			Help: "The amount of manager rewards of uniIOTX",
 		})
 
 	ExchangeRatio = promauto.NewGauge(
@@ -28,15 +28,21 @@ var (
 			Help: "The exchange ratio of uniIOTX to IOTX",
 		})
 
-	Delegates = promauto.NewGaugeVec(
+	StakedDelegates = promauto.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: prefix + "delegates",
-			Help: "The latest delegates of specified bucket amount level",
+			Name: prefix + "staked_delegates",
+			Help: "The number of staked delegates at specified bucket level",
 		}, []string{"bucketLevel"})
 
-	Buckets = promauto.NewGaugeVec(
+	StakedBuckets = promauto.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: prefix + "buckets",
-			Help: "The latest buckets of specified bucket amount level",
+			Name: prefix + "staked_buckets",
+			Help: "The number of staked buckets at specified bucket level",
 		}, []string{"bucketLevel"})
+
+	RedeemedBuckets = promauto.NewGauge(
+		prometheus.GaugeOpts{
+			Name: prefix + "redeemed_buckets",
+			Help: "The number of redeemed buckets",
+		})
 )

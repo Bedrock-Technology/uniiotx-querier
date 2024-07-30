@@ -72,6 +72,8 @@ func (s *DataServer) newHandler() http.Handler {
 	r.Post("/stakedDelegates", s.If.ListStakedDelegatesFn()())
 	r.Post("/stakedBuckets", s.If.ListStakedBucketsFn()())
 
+	r.Post("/redeemedBuckets", s.If.ListRedeemedBucketsFn()())
+
 	// Swagger UI endpoint at /docs.
 	r.Docs("/docs", swgui.New)
 
