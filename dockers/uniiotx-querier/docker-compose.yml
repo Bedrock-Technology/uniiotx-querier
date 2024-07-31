@@ -1,0 +1,31 @@
+version: "2.4"
+
+services:
+  controller:
+    image: uniiotx-querier
+    container_name: uniiotx-querier
+    logging:
+      options:
+        max-size: "500m"
+        max-file: "5"
+    command: |
+      /app/uniiotx-querier
+      --devMode=false
+
+      --logFileName=""
+      --consoleEncoder=false
+      --stacktrace=true
+      
+      --dataServerAddr="0.0.0.0:8011"
+      --metricServerAddr="0.0.0.0:7000"
+      
+      --sqliteDSN="/app/data/sqlite.db"
+      
+      --chainHost="https://babel-api.mainnet.iotex.io"
+      
+      --systemstaking="0x68db92a6a78a39dcaff1745da9e89e230ef49d3d"
+      --iotxstaking="0x2c914Ba874D94090Ba0E6F56790bb8Eb6D4C7e5f"
+      --iotxClear="0x7AD800771743F4e29f55235A55895273035FB546"
+    network_mode: host
+    volumes:
+      - ./data:/app/data/
