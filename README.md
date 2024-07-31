@@ -96,6 +96,7 @@ The table below briefly describes the contents of each package.
 | ./bindings    | Contains Golang bindings of ABIs mentioned above for interaction with smart contracts.                                         |
 | ./common      | Contains common elements that are shared across packages of this project.                                                      |
 | ./config      | Contains configuration definition of this App.                                                                                 |
+| ./dockers     | Contains associated docker-compose.yml files for running Docker containers.                                                    |
 | ./docs        | Contains documents related to this project.                                                                                    |
 | ./interactors | Contains use case interactors for data service in accordance with framework [swaggest/rest](https://github.com/swaggest/rest). | 
 | ./logger      | Contains MyLogger, a customized & structured logger class based on zap.Logger.                                                 |
