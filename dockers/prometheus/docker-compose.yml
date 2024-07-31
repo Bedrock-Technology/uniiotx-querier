@@ -5,6 +5,8 @@ services:
     image: prom/prometheus
     container_name: prometheus
     network_mode: host
+    #    ports:
+    #      - 9090:9090
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
