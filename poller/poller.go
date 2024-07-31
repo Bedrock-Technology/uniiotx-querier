@@ -160,7 +160,6 @@ func (p *Poller) syncAssetStatistics() error {
 	return nil
 }
 
-// TODO: Persistence
 func (p *Poller) syncBuckets() error {
 	// 1. Check time
 	timeToSync := false

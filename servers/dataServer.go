@@ -70,7 +70,7 @@ func (s *DataServer) newHandler() http.Handler {
 
 	r.Post("/redeemedBuckets", s.If.ListRedeemedBucketsFn()())
 
-	r.Post("/managerRewards", s.If.GetManagerRewardsFn()()) // TODO DEL?
+	r.Post("/managerRewards", s.If.GetManagerRewardsFn()())
 	r.Post("/managerRewardsByYear", s.If.ListManagerRewardsByYearFn()())
 	r.Post("/managerRewardsByMonth", s.If.ListManagerRewardsByMonthFn()())
 
