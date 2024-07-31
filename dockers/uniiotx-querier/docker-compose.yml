@@ -2,7 +2,7 @@ version: "2.4"
 
 services:
   controller:
-    image: uniiotx-querier
+    image: zealydocker/uniiotx-querier
     container_name: uniiotx-querier
     logging:
       options:
