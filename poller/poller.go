@@ -258,6 +258,7 @@ func (p *Poller) syncStakedBuckets() error {
 		labelVal := fmt.Sprintf("bucketLevel%v", bucketLevel+1)
 		metrics.StakedDelegates.With(prometheus.Labels{"bucketLevel": labelVal}).Set(float64(len(delegates)))
 	}
+	metrics.TotalStakedDelegates.Set(float64(len(delegateToBuckets)))
 
 	return nil
 }

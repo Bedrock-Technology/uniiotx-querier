@@ -16,6 +16,12 @@ var (
 			Help: "The number of staked delegates at specified bucket level",
 		}, []string{"bucketLevel"})
 
+	TotalStakedDelegates = promauto.NewGauge(
+		prometheus.GaugeOpts{
+			Name: prefix + "total_staked_delegates",
+			Help: "The total number of staked delegates",
+		})
+
 	StakedBuckets = promauto.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: prefix + "staked_buckets",
