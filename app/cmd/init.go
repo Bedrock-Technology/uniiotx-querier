@@ -13,6 +13,9 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&config.C.DataServerAddr, "dataServerAddr", "", "0.0.0.0:8011", "Address to be used by data server")
 	rootCmd.PersistentFlags().StringVarP(&config.C.MetricServerAddr, "metricServerAddr", "", "0.0.0.0:7000", "Address to be used by metric server")
+	rootCmd.PersistentFlags().StringVarP(&config.C.SSHServerAddr, "sshServerAddr", "", "0.0.0.0:6000", "Address to be used by ssh server")
+
+	rootCmd.PersistentFlags().StringVarP(&config.C.SSHKeyPath, "sshKeyPath", "", ".ssh/id_ed25519", "The SSH key path of the SSH server")
 
 	rootCmd.PersistentFlags().StringVarP(&config.C.SqliteDSN, "sqliteDSN", "", "./sqlite.db", "Sqlite data source name")
 

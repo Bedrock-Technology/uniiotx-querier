@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Bedrock-Technology/uniiotx-querier/bindings"
+	"github.com/Bedrock-Technology/uniiotx-querier/bubbletea"
 	"github.com/Bedrock-Technology/uniiotx-querier/config"
 	"github.com/Bedrock-Technology/uniiotx-querier/interactors"
 	"github.com/Bedrock-Technology/uniiotx-querier/logger"
@@ -98,6 +99,14 @@ var rootCmd = &cobra.Command{
 			Addr:   config.C.MetricServerAddr,
 		}
 
+		// Create SSH server
+		sshServer := servers.SSHServer{
+			Logger:     myLogger,
+			Handle:     bubbletea.Handler,
+			SSHKeyPath: config.C.SSHKeyPath,
+			Addr:       config.C.SSHServerAddr,
+		}
+
 		// -------------------------------------------------------------------------------------------------------------
 		// Start Program
 		// -------------------------------------------------------------------------------------------------------------
@@ -147,6 +156,13 @@ var rootCmd = &cobra.Command{
 		wg.Add(1)
 		go func() {
 			metricServer.Start()
+			wg.Done()
+		}()
+
+		// Start ssh server
+		wg.Add(1)
+		go func() {
+			sshServer.Start()
 			wg.Done()
 		}()
 

@@ -9,6 +9,9 @@ var C = &Config{
 
 	DataServerAddr:   "0.0.0.0:8011",
 	MetricServerAddr: "0.0.0.0:7000",
+	SSHServerAddr:    "0.0.0.0:6000",
+
+	SSHKeyPath: ".ssh/id_ed25519",
 
 	SqliteDSN: "./sqlite.db",
 
@@ -28,6 +31,9 @@ type Config struct {
 
 	DataServerAddr   string
 	MetricServerAddr string
+	SSHServerAddr    string
+
+	SSHKeyPath string
 
 	SqliteDSN string
 
