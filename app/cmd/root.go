@@ -178,6 +178,7 @@ var rootCmd = &cobra.Command{
 		dataServer.Close()
 		metricServer.Close()
 		myStorer.Close()
+		sshServer.Close()
 		c.Close()
 
 		wg.Wait()
